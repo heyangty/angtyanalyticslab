@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AngtyAnalyticsLab — Demo Store</title>
+
+  <!-- ============================================================
+       STEP 1: REPLACE G-XXXXXXXXXX WITH YOUR GA4 MEASUREMENT ID
+       ============================================================ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8N4SWWXQB0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-8N4SWWXQB0');
+
+    // Custom event helpers
+    function trackEvent(eventName, params) {
+      gtag('event', eventName, params);
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --cream:   #FAF7F2;
+      --sand:    #EDE7DA;
+      --bark:    #2B2218;
+      --rust:    #C4541A;
+      --sage:    #5A7A5C;
+      --rust-lt: #F5E9E2;
+      --radius:  12px;
+      --chat-w:  360px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--bark);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: var(--cream);
+      border-bottom: 1px solid var(--sand);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--bark);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--rust); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--bark);
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .nav-cart {
+      background: var(--bark);
+      color: var(--cream);
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-cart:hover { background: var(--rust); }
+
+    /* ── HERO ── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 88vh;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1.2rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--bark);
+      margin-bottom: 1.5rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--rust);
+    }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--bark);
+      opacity: 0.65;
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--rust);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 99px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s;
+    }
+    .btn-primary:hover { background: #a84215; transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--bark);
+      border: 1.5px solid var(--bark);
+      padding: 0.85rem 2rem;
+      border-radius: 99px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { background: var(--bark); color: var(--cream); }
+
+    .hero-right {
+      background: var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      position: relative;
+    }
+    .hero-img-placeholder {
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 4/5;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #ddd3be 0%, #c9bfaa 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-img-placeholder::before {
+      content: '';
+      position: absolute;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(196,84,26,0.12);
+      top: -40px; right: -40px;
+    }
+    .img-icon { font-size: 4rem; }
+    .img-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--bark);
+      opacity: 0.6;
+    }
+    .badge {
+      position: absolute;
+      bottom: 1.5rem; left: 1.5rem;
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); }
+    .badge-text { font-size: 0.75rem; font-weight: 500; }
+
+    /* ── SECTION LABEL ── */
+    .section { padding: 5rem 4rem; }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--rust);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── PRODUCTS ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(43,34,24,0.12);
+    }
+    .product-img {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .c1 { background: #F5E9E2; }
+    .c2 { background: #E2ECE2; }
+    .c3 { background: #E2E9F0; }
+    .c4 { background: #F0EDE2; }
+    .c5 { background: #EDE2F0; }
+    .c6 { background: #F0E2E2; }
+    .product-info { padding: 1rem 1.2rem; }
+    .product-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+    .product-cat {
+      font-size: 0.75rem;
+      opacity: 0.5;
+      margin-bottom: 0.6rem;
+    }
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .product-price {
+      font-weight: 700;
+      color: var(--rust);
+      font-size: 1rem;
+    }
+    .add-btn {
+      background: var(--bark);
+      color: #fff;
+      border: none;
+      padding: 0.35rem 0.85rem;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .add-btn:hover { background: var(--rust); }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      background: var(--bark);
+      color: var(--cream);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      text-align: center;
+      padding: 3rem 4rem;
+      gap: 2rem;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--rust);
+    }
+    .stat-desc { font-size: 0.85rem; opacity: 0.6; margin-top: 0.3rem; }
+
+    /* ── CATEGORIES ── */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+    .cat-card {
+      background: var(--sand);
+      border-radius: var(--radius);
+      padding: 2rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .cat-card:hover { background: var(--rust-lt); transform: translateY(-2px); }
+    .cat-icon { font-size: 2.2rem; }
+    .cat-name { font-weight: 500; font-size: 1rem; }
+    .cat-count { font-size: 0.78rem; opacity: 0.5; margin-top: 0.2rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bark);
+      color: var(--cream);
+      text-align: center;
+      padding: 2.5rem;
+      font-size: 0.82rem;
+      opacity: 0.8;
+    }
+    footer a { color: var(--rust); text-decoration: none; }
+
+    /* ── GEMINI CHATBOT ── */
+    /* ============================================================
+       STEP 2: REPLACE YOUR_GEMINI_API_KEY WITH YOUR ACTUAL KEY
+       ============================================================ */
+    #chat-toggle {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--rust);
+      color: #fff;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(196,84,26,0.35);
+      z-index: 999;
+      transition: transform 0.2s, background 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #chat-toggle:hover { transform: scale(1.08); background: #a84215; }
+
+    #chat-box {
+      position: fixed;
+      bottom: 5.5rem; right: 2rem;
+      width: var(--chat-w);
+      max-height: 480px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 16px 48px rgba(43,34,24,0.18);
+      display: flex;
+      flex-direction: column;
+      z-index: 998;
+      overflow: hidden;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    #chat-box.hidden { opacity: 0; pointer-events: none; transform: translateY(12px); }
+
+    .chat-head {
+      background: var(--bark);
+      color: var(--cream);
+      padding: 1rem 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .chat-head-icon { font-size: 1.1rem; }
+    .chat-head-title { font-weight: 500; font-size: 0.9rem; }
+    .chat-head-sub { font-size: 0.72rem; opacity: 0.55; }
+
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .msg {
+      max-width: 85%;
+      padding: 0.65rem 1rem;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .msg.bot {
+      background: var(--sand);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user {
+      background: var(--rust);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.typing { opacity: 0.6; font-style: italic; }
+
+    .chat-input-row {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.8rem;
+      border-top: 1px solid var(--sand);
+    }
+    #chat-input {
+      flex: 1;
+      border: 1.5px solid var(--sand);
+      border-radius: 99px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #chat-input:focus { border-color: var(--rust); }
+    #chat-send {
+      background: var(--rust);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px; height: 36px;
+      font-size: 1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    #chat-send:hover { background: #a84215; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--sage);
+      color: #fff;
+      padding: 0.7rem 1.6rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 9999;
+      transition: transform 0.3s ease;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-right { min-height: 300px; }
+      .hero-left { padding: 3rem 1.5rem; }
+      .section { padding: 3rem 1.5rem; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 2rem 1.5rem; }
+      .categories { grid-template-columns: 1fr; }
+      #chat-box { width: calc(100vw - 2rem); right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Angty<span>AnalyticsLab</span></div>
+  <ul class="nav-links">
+    <li><a href="#products" onclick="trackEvent('nav_click', {link:'Products'})">Products</a></li>
+    <li><a href="#categories" onclick="trackEvent('nav_click', {link:'Categories'})">Categories</a></li>
+    <li><a href="#about" onclick="trackEvent('nav_click', {link:'About'})">About</a></li>
+  </ul>
+  <button class="nav-cart" onclick="trackEvent('cart_open', {})">🛒 Cart (0)</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">✦ Angty's Analytics Demo Store</p>
+    <h1 class="hero-title">Wear what<br>you <em>believe in.</em></h1>
+    <p class="hero-sub">Welcome to AngtyAnalyticsLab — a live demo store where every click, scroll, and purchase becomes real data in Google Analytics.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'}); trackEvent('cta_click', {label:'Shop Now'})">Shop Now</button>
+      <button class="btn-secondary" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'}); trackEvent('cta_click', {label:'Browse Categories'})">Browse Categories</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-placeholder">
+      <div class="img-icon">🛍️</div>
+      <div class="img-label">New Collection</div>
+      <div class="badge">
+        <div class="badge-dot"></div>
+        <span class="badge-text">Live store demo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div>
+    <div class="stat-num">20K+</div>
+    <div class="stat-desc">Transactions</div>
+  </div>
+  <div>
+    <div class="stat-num">196K</div>
+    <div class="stat-desc">Users</div>
+  </div>
+  <div>
+    <div class="stat-num">$2.9M</div>
+    <div class="stat-desc">Revenue</div>
+  </div>
+  <div>
+    <div class="stat-num">4.3★</div>
+    <div class="stat-desc">Avg Rating</div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <p class="section-label">Browse</p>
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="categories">
+    <div class="cat-card" onclick="trackEvent('category_click', {category:'Apparel'})">
+      <div class="cat-icon">👕</div>
+      <div>
+        <div class="cat-name">Apparel</div>
+        <div class="cat-count">Hats · Shirts · Socks</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="trackEvent('category_click', {category:'Lifestyle'})">
+      <div class="cat-icon">☕</div>
+      <div>
+        <div class="cat-name">Lifestyle</div>
+        <div class="cat-count">Drinkware · Sunglasses · Pins</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="trackEvent('category_click', {category:'Stationery'})">
+      <div class="cat-icon">📓</div>
+      <div>
+        <div class="cat-name">Stationery</div>
+        <div class="cat-count">Notebooks · Pens · Stickers</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="trackEvent('category_click', {category:'Eco'})">
+      <div class="cat-icon">🌿</div>
+      <div>
+        <div class="cat-name">Eco Collection</div>
+        <div class="cat-count">Tumblers · Totes · Journals</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="trackEvent('category_click', {category:'YouTube'})">
+      <div class="cat-icon">▶️</div>
+      <div>
+        <div class="cat-name">YouTube Brand</div>
+        <div class="cat-count">Merch · Accessories</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="trackEvent('category_click', {category:'Android'})">
+      <div class="cat-icon">🤖</div>
+      <div>
+        <div class="cat-name">Android Brand</div>
+        <div class="cat-count">Figures · Apparel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section" id="products" style="background: var(--sand);">
+  <p class="section-label">Featured</p>
+  <h2 class="section-title">Top Products</h2>
+  <div class="products-grid">
+
+    <div class="product-card" onclick="trackEvent('product_view', {item:'Google Sticker Pack'})">
+      <div class="product-img c1">🎨</div>
+      <div class="product-info">
+        <div class="product-name">Google Sticker Pack</div>
+        <div class="product-cat">Stationery</div>
+        <div class="product-footer">
+          <span class="product-price">$8.99</span>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart('Google Sticker Pack', 8.99)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackEvent('product_view', {item:'Recycled Tumbler'})">
+      <div class="product-img c2">♻️</div>
+      <div class="product-info">
+        <div class="product-name">Recycled Tumbler</div>
+        <div class="product-cat">Eco · Lifestyle</div>
+        <div class="product-footer">
+          <span class="product-price">$24.99</span>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart('Recycled Tumbler', 24.99)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackEvent('product_view', {item:'Google Logo Tee'})">
+      <div class="product-img c3">👕</div>
+      <div class="product-info">
+        <div class="product-name">Google Logo Tee</div>
+        <div class="product-cat">Apparel</div>
+        <div class="product-footer">
+          <span class="product-price">$29.99</span>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart('Google Logo Tee', 29.99)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackEvent('product_view', {item:'Android Neon Pen'})">
+      <div class="product-img c4">🖊️</div>
+      <div class="product-info">
+        <div class="product-name">Android Neon Pen</div>
+        <div class="product-cat">Stationery</div>
+        <div class="product-footer">
+          <span class="product-price">$5.49</span>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart('Android Neon Pen', 5.49)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackEvent('product_view', {item:'YouTube Cap'})">
+      <div class="product-img c5">🧢</div>
+      <div class="product-info">
+        <div class="product-name">YouTube Cap</div>
+        <div class="product-cat">Apparel</div>
+        <div class="product-footer">
+          <span class="product-price">$19.99</span>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart('YouTube Cap', 19.99)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackEvent('product_view', {item:'Eco Tote Bag'})">
+      <div class="product-img c6">🌿</div>
+      <div class="product-info">
+        <div class="product-name">Eco Tote Bag</div>
+        <div class="product-cat">Eco · Lifestyle</div>
+        <div class="product-footer">
+          <span class="product-price">$14.99</span>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart('Eco Tote Bag', 14.99)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="about">
+  <p>AngtyAnalyticsLab — created by <strong>Dr. Angty</strong> for classroom use. <br>
+  Data tracked via <a href="#">Google Analytics 4</a> · Powered by <a href="#">Gemini AI</a></p>
+  <p style="margin-top:0.5rem; opacity:0.4;">This is a demo site for BINUS Business School. No real transactions are processed.</p>
+</footer>
+
+<!-- TOAST -->
+<div id="toast">✓ Added to cart</div>
+
+<!-- GEMINI CHAT BUTTON -->
+<button id="chat-toggle" onclick="toggleChat()" title="Ask Angty's AI assistant">✦</button>
+
+<!-- GEMINI CHAT BOX -->
+<div id="chat-box" class="hidden">
+  <div class="chat-head">
+    <div class="chat-head-icon">✦</div>
+    <div>
+      <div class="chat-head-title">Angty's Lab Assistant</div>
+      <div class="chat-head-sub">Powered by Gemini</div>
+    </div>
+  </div>
+  <div id="chat-messages">
+    <div class="msg bot">Hi! I'm Angty's Lab assistant 👋 Ask me anything about our products, shipping, or recommendations.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="Ask something..." onkeydown="if(event.key==='Enter') sendMessage()" />
+    <button id="chat-send" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+  // ── CART ──
+  let cartCount = 0;
+  function addToCart(name, price) {
+    cartCount++;
+    document.querySelector('.nav-cart').textContent = `🛒 Cart (${cartCount})`;
+    trackEvent('add_to_cart', { item_name: name, value: price, currency: 'USD' });
+    showToast(`✓ ${name} added`);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ── CHAT ──
+  let chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chat-box').classList.toggle('hidden', !chatOpen);
+    document.getElementById('chat-toggle').textContent = chatOpen ? '✕' : '✦';
+    if (chatOpen) {
+      trackEvent('chat_open', {});
+      document.getElementById('chat-input').focus();
+    }
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMsg(text, 'user');
+    input.value = '';
+    trackEvent('chat_message', { message_length: text.length });
+
+    const typing = addMsg('Thinking...', 'bot typing');
+
+    try {
+      // ============================================================
+      // STEP 2: REPLACE YOUR_GEMINI_API_KEY WITH YOUR ACTUAL KEY
+      // ============================================================
+      const GEMINI_KEY = 'AIzaSyCcoWiPJCiEzSv6gp60L4KwM8t2JMzZ_oE';
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `You are a friendly assistant for AngtyAnalyticsLab, a demo Google merchandise store created by Dr. Angty (Dr. Angtyasti Jiwasiddi) for a university marketing class at BINUS Business School. 
+                       The store sells Google, YouTube, and Android branded apparel, lifestyle goods, and stationery. 
+                       Be concise (2-3 sentences max). Stay on topic about products and shopping. 
+                       User asked: ${text}`
+              }]
+            }]
+          })
+        }
+      );
+      const data = await res.json();
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response right now.";
+      typing.remove();
+      addMsg(reply, 'bot');
+    } catch(e) {
+      typing.remove();
+      addMsg("Oops! The assistant is unavailable right now. (Check your API key)", 'bot');
+    }
+  }
+
+  function addMsg(text, type) {
+    const msgs = document.getElementById('chat-messages');
+    const el = document.createElement('div');
+    el.className = `msg ${type}`;
+    el.textContent = text;
+    msgs.appendChild(el);
+    msgs.scrollTop = msgs.scrollHeight;
+    return el;
+  }
+
+  // ── SCROLL TRACKING ──
+  let scrollTracked = {};
+  window.addEventListener('scroll', () => {
+    const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+    [25, 50, 75, 100].forEach(milestone => {
+      if (pct >= milestone && !scrollTracked[milestone]) {
+        scrollTracked[milestone] = true;
+        trackEvent('scroll_depth', { percent: milestone });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
